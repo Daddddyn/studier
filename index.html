@@ -61,7 +61,7 @@ h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)
 .shut{width:76px;height:76px;border-radius:50%;border:4px solid #fff;background:none;padding:5px}.shut i{display:block;width:100%;height:100%;border-radius:50%;background:#fff;transition:transform .1s}.shut:active i{transform:scale(.86)}
 .cc{min-width:84px;padding:12px 18px;border-radius:24px;background:#ffffff26;font-weight:700;backdrop-filter:blur(8px)}.cc.go{background:var(--gold);text-align:center}
 #cerr{position:absolute;top:30%;left:0;right:0;text-align:center;padding:24px}
-#cam.fl::after{content:"";position:absolute;inset:0;background:#fff;opacity:.7;animation:f .2s forwards}@keyframes f{to{opacity:0}}
+#cam.fl::after{content:"";position:absolute;inset:0;background:#fff;opacity:.7;animation:f .2s forwards;pointer-events:none;z-index:5}@keyframes f{to{opacity:0}}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px}.ov.on{display:flex}
 .sp{width:54px;height:54px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--gold);animation:r 0.9s linear infinite}@keyframes r{to{transform:rotate(360deg)}}
 .sheet{position:fixed;inset:0;background:#0007;z-index:40;display:none;align-items:flex-end;justify-content:center}.sheet.on{display:flex}
@@ -126,7 +126,7 @@ $('#scan').onclick=()=>{pages=[];openCam()};
 $('#cx').onclick=()=>{if(pages.length&&!confirm('Discard '+pages.length+' photos?'))return;pages=[];closeCam()};
 const MAX=1800;
 function shrink(src,w,h){const sc=Math.min(1,MAX/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.72)}
-$('#sht').onclick=()=>{const v=$('#vid');if(!v.videoWidth)return toast('Camera is not ready');pages.push(shrink(v,v.videoWidth,v.videoHeight));thumbs();const c=$('#cam');c.classList.remove('fl');void c.offsetWidth;c.classList.add('fl');navigator.vibrate&&navigator.vibrate(15)};
+$('#sht').onclick=()=>{const v=$('#vid');if(!v.videoWidth)return toast('Camera is not ready');pages.push(shrink(v,v.videoWidth,v.videoHeight));thumbs();const c=$('#cam');c.classList.remove('fl');void c.offsetWidth;c.classList.add('fl');setTimeout(()=>c.classList.remove('fl'),250);navigator.vibrate&&navigator.vibrate(15)};
 $('#file').onchange=async e=>{for(const f of e.target.files){await new Promise(r=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{pages.push(shrink(i,i.naturalWidth,i.naturalHeight));URL.revokeObjectURL(u);r()};i.onerror=()=>{toast('Could not read one photo');r()};i.src=u})}e.target.value='';thumbs()};
 $('#dn').onclick=()=>{if(!pages.length)return toast('Take at least one page first');closeCam();run()};
 
