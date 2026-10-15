@@ -149,16 +149,16 @@ Rules:
 - Fix handwriting or photo typos. Give the set a short title.`;
 const SCHEMA={type:'OBJECT',properties:{title:{type:'STRING'},cards:{type:'ARRAY',items:{type:'OBJECT',properties:{term:{type:'STRING'},definition:{type:'STRING'},star:{type:'BOOLEAN'}},required:['term','definition','star']}}},required:['title','cards']};
 async function gemini(){const key=LS.get('mcs_key','');
- const body=JSON.stringify({contents:[{parts:[{text:PROMPT},...pages.map(p=>({inlineData:{mimeType:'image/jpeg',data:p.split(',')[1]}}))]}],generationConfig:{temperature:.2,responseMimeType:'application/json',responseSchema:SCHEMA,maxOutputTokens:32768,thinkingConfig:{thinkingBudget:0}}});
+ const body=JSON.stringify({contents:[{parts:[{text:PROMPT},...pages.map(p=>({inlineData:{mimeType:'image/jpeg',data:p.split(',')[1]}}))]}],generationConfig:{temperature:.2,responseMimeType:'application/json',responseSchema:SCHEMA,maxOutputTokens:32768}});
  let err;
- for(const m of ['gemini-2.5-flash','gemini-2.5-flash-lite'])for(let a=0;a<2;a++){
+ for(const m of ['gemini-3.8-flash','gemini-2.5-flash-lite'])for(let a=0;a<2;a++){
   let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},body})}catch(e){if(e.name==='AbortError')throw e;throw Error('No internet connection. Check your signal and retry.')}
   if(r.ok){const j=await r.json();const t=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');try{return JSON.parse(t)}catch{err=Error('The AI reply was cut off. Try fewer pages at once.');break}}
   const e=await r.json().catch(()=>({})),msg=e.error?.message||'Error '+r.status;
   if(r.status===400&&/API key/i.test(msg)){LS.set('mcs_key','');throw Error('Your API key was rejected. Tap Back to camera, then add a new key in Settings.')};
   if(r.status===403)throw Error('Google blocked this key. Make a new one at aistudio.google.com/apikey and add it in Settings.');
   err=Error(r.status===429?'The free limit was hit for a moment. Wait a minute and retry.':msg);
-  if(![429,500,503].includes(r.status))throw err;
+  if(r.status===404)break;if(![429,500,503].includes(r.status))throw err;
   await new Promise(s=>setTimeout(s,1500*(a+1)));}
  throw err||Error('Something went wrong.')}
 async function run(){ctl=new AbortController();const B=$('#busy');B.classList.add('on');$('#sp').style.display='';$('#bb').style.display='none';$('#bh').style.display='';
