@@ -72,9 +72,11 @@ input{width:100%;font:16px ui-monospace,monospace;padding:14px;border-radius:12p
 </style></head><body>
 
 <section class="screen on" id="home">
- <div class="top"><div class="crest">M</div><div><h1 class="serif">McEwen's Studier</h1><div class="sub">Honors American World History</div></div></div>
+ <div class="top"><div class="crest">M</div><div><h1 class="serif">McEwen's Studier</h1><div class="sub">Honors American World History</div></div>
+ <button class="ic" id="gear" aria-label="Settings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button></div>
  <div class="body">
   <button class="cta" id="scan"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg><div><b>Scan a study packet</b><span>Snap every page, tap Done, get flash cards</span></div></button>
+  <div class="tip" id="kcard" hidden style="border-style:solid"><span>Add your free Google key once to start scanning.</span><button class="chip" id="kb" style="margin-left:auto;color:var(--ink);font-size:14px">Add key</button></div>
   <div class="tip" id="tip" hidden><span>Install: tap <b>Share</b>, then <b>Add to Home Screen</b>.</span><button id="tipx" aria-label="Dismiss">✕</button></div>
   <h2>Your sets</h2><div id="sets"></div>
  </div>
@@ -101,6 +103,7 @@ input{width:100%;font:16px ui-monospace,monospace;padding:14px;border-radius:12p
 
 <div class="ov" id="busy"><div class="sp" id="sp"></div><div class="serif" style="font-size:22px" id="bm"></div><div class="hint" id="bh">This usually takes under a minute.</div><div id="bb" style="display:none;gap:10px"><button class="p" id="rt" style="padding:14px 26px">Retry</button><button class="s" id="bc">Back to camera</button></div></div>
 
+<div class="sheet" id="set"><div><h3 class="serif">Connect your free AI</h3><ol><li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></li><li>Sign in, tap <b>Create API key</b></li><li>Copy it and paste below. One time only.</li></ol><input id="key" placeholder="Paste API key" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><div style="display:flex;gap:10px"><button class="s" id="kc">Close</button><button class="p" id="ks">Save key</button></div><div class="hint" style="margin-top:12px">Your key stays on this phone and goes only to Google.</div></div></div>
 <div id="toast"></div>
 
 <script>
@@ -112,10 +115,16 @@ function toast(m,ms=2400){const t=$('#toast');t.textContent=m;t.classList.add('o
 const show=id=>$$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
 const save=()=>LS.set('mcs_sets',sets);
 
-function home(){$('#sets').innerHTML=sets.length?sets.map(s=>`<button class="row" data-id="${s.id}"><div><b class="serif">${esc(s.title)}</b><small>${s.cards.length} cards · ${s.cards.filter(c=>c.star).length} ★ test · ${new Date(s.date).toLocaleDateString()}</small></div><span>›</span></button>`).join(''):'<div class="empty">No sets yet.<br>Scan your first packet to begin.</div>'}
+function home(){$('#kcard').hidden=!!LS.get('mcs_key','');$('#sets').innerHTML=sets.length?sets.map(s=>`<button class="row" data-id="${s.id}"><div><b class="serif">${esc(s.title)}</b><small>${s.cards.length} cards · ${s.cards.filter(c=>c.star).length} ★ test · ${new Date(s.date).toLocaleDateString()}</small></div><span>›</span></button>`).join(''):'<div class="empty">No sets yet.<br>Scan your first packet to begin.</div>'}
 $('#sets').onclick=e=>{const r=e.target.closest('.row');if(r)openSet(r.dataset.id)};
 if(navigator.standalone===false&&!LS.get('mcs_tip',0))$('#tip').hidden=false;
 $('#tipx').onclick=()=>{$('#tip').hidden=true;LS.set('mcs_tip',1)};
+
+/* settings */
+function openSettings(){$('#key').value=LS.get('mcs_key','');$('#set').classList.add('on')}
+$('#gear').onclick=$('#kb').onclick=openSettings;$('#kc').onclick=()=>$('#set').classList.remove('on');
+$('#ks').onclick=()=>{const k=$('#key').value.trim();if(k.length<20)return toast('That key looks too short');LS.set('mcs_key',k);$('#set').classList.remove('on');home();toast('Key saved');if(pages.length)run()};
+$('#set').onclick=e=>{if(e.target.id==='set')e.target.classList.remove('on')};
 
 /* camera */
 const thumbs=()=>{$('#cn').textContent=pages.length+(pages.length===1?' page':' pages');$('#th').innerHTML=pages.map((p,i)=>`<div><img src="${p}" alt="Page ${i+1}"><b data-i="${i}">✕</b></div>`).join('');$('#th').scrollLeft=1e5}
@@ -128,7 +137,7 @@ const MAX=1800;
 function shrink(src,w,h){const sc=Math.min(1,MAX/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.72)}
 $('#sht').onclick=()=>{const v=$('#vid');if(!v.videoWidth)return toast('Camera is not ready');pages.push(shrink(v,v.videoWidth,v.videoHeight));thumbs();const c=$('#cam');c.classList.remove('fl');void c.offsetWidth;c.classList.add('fl');setTimeout(()=>c.classList.remove('fl'),250);navigator.vibrate&&navigator.vibrate(15)};
 $('#file').onchange=async e=>{for(const f of e.target.files){await new Promise(r=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{pages.push(shrink(i,i.naturalWidth,i.naturalHeight));URL.revokeObjectURL(u);r()};i.onerror=()=>{toast('Could not read one photo');r()};i.src=u})}e.target.value='';thumbs()};
-$('#dn').onclick=()=>{if(!pages.length)return toast('Take at least one page first');closeCam();run()};
+$('#dn').onclick=()=>{if(!pages.length)return toast('Take at least one page first');closeCam();if(!LS.get('mcs_key',''))return openSettings();run()};
 
 /* AI */
 const PROMPT=`You are making flash cards from photos of a multi-page study packet for Honors American World History. Read EVERY page in order and cover the whole packet.
@@ -139,16 +148,15 @@ Rules:
 - If an item is a question, the term is the question and the definition is the answer. If a statement has no answer given, write the key fact or explanation from your history knowledge.
 - Fix handwriting or photo typos. Give the set a short title.`;
 const SCHEMA={type:'OBJECT',properties:{title:{type:'STRING'},cards:{type:'ARRAY',items:{type:'OBJECT',properties:{term:{type:'STRING'},definition:{type:'STRING'},star:{type:'BOOLEAN'}},required:['term','definition','star']}}},required:['title','cards']};
-const KEY='AQ.Ab8RN6LdaQmdd2ndVKry8XxaU3Ihg93k8q7xPocUDfTZEF3A5g'; // your Gemini key from aistudio.google.com/apikey
-async function gemini(){if(KEY.startsWith('PASTE'))throw Error('Setup not finished: put your Gemini key in index.html.');
+async function gemini(){const key=LS.get('mcs_key','');
  const body=JSON.stringify({contents:[{parts:[{text:PROMPT},...pages.map(p=>({inlineData:{mimeType:'image/jpeg',data:p.split(',')[1]}}))]}],generationConfig:{temperature:.2,responseMimeType:'application/json',responseSchema:SCHEMA,maxOutputTokens:32768,thinkingConfig:{thinkingBudget:0}}});
  let err;
  for(const m of ['gemini-2.5-flash','gemini-2.5-flash-lite'])for(let a=0;a<2;a++){
-  let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':KEY},body})}catch(e){if(e.name==='AbortError')throw e;throw Error('No internet connection. Check your signal and retry.')}
+  let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},body})}catch(e){if(e.name==='AbortError')throw e;throw Error('No internet connection. Check your signal and retry.')}
   if(r.ok){const j=await r.json();const t=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');try{return JSON.parse(t)}catch{err=Error('The AI reply was cut off. Try fewer pages at once.');break}}
   const e=await r.json().catch(()=>({})),msg=e.error?.message||'Error '+r.status;
-  if(r.status===400&&/API key/i.test(msg))throw Error('The app\'s AI key has a problem. Tell the app owner.');
-  if(r.status===403)throw Error('The AI service blocked this request. Try again later.');
+  if(r.status===400&&/API key/i.test(msg)){LS.set('mcs_key','');throw Error('Your API key was rejected. Tap Back to camera, then add a new key in Settings.')};
+  if(r.status===403)throw Error('Google blocked this key. Make a new one at aistudio.google.com/apikey and add it in Settings.');
   err=Error(r.status===429?'The free limit was hit for a moment. Wait a minute and retry.':msg);
   if(![429,500,503].includes(r.status))throw err;
   await new Promise(s=>setTimeout(s,1500*(a+1)));}
