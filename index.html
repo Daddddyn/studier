@@ -1,0 +1,196 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Studier">
+<meta name="theme-color" content="#F5F0E6"><title>McEwen's Studier</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{--bg:#F5F0E6;--card:#FFFDF8;--ink:#1D2433;--mut:#6B7280;--btn:#1F3A5F;--gold:#B8893B;--line:#E6DFCF;--red:#B3362B;--sh:0 1px 2px #1d243314,0 6px 18px #1d24331a;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#121722;--card:#1C2333;--ink:#F1EDE3;--mut:#9AA3B5;--btn:#3B5F94;--gold:#E0B25A;--line:#2B3348;--sh:0 6px 18px #0006}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,system-ui,sans-serif;overscroll-behavior:none;-webkit-user-select:none;user-select:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+[contenteditable]{-webkit-user-select:text;user-select:text;outline:0}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+.serif{font-family:ui-serif,"New York",Georgia,serif}
+.screen{display:none;height:100%;flex-direction:column;max-width:520px;margin:0 auto}.screen.on{display:flex}
+.top{display:flex;align-items:center;gap:12px;padding:14px 20px 8px}
+.crest{width:44px;height:44px;border-radius:13px;background:linear-gradient(160deg,#1F3A5F,#13233a);color:#F5F0E6;display:grid;place-items:center;font:700 24px ui-serif,Georgia,serif;box-shadow:var(--sh);border:1.5px solid var(--gold)}
+h1{font-size:22px;margin:0;line-height:1.1}.sub{color:var(--mut);font-size:13px}
+.ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;margin-left:auto}.ic:active{background:var(--line)}
+.body{flex:1;overflow-y:auto;padding:10px 20px 24px;-webkit-overflow-scrolling:touch}
+.cta{width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:var(--btn);color:#fff;border-radius:22px;padding:20px;box-shadow:var(--sh);transition:transform .15s}.cta:active{transform:scale(.98)}
+.cta b{font-size:19px;display:block}.cta span{font-size:13px;opacity:.8}
+.cta svg{flex:none}
+h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:26px 4px 10px}
+.row{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--sh)}.row:active{transform:scale(.99)}
+.row small{display:block;color:var(--mut);margin-top:2px}.row>span{color:var(--mut);font-size:22px}
+.empty{text-align:center;color:var(--mut);padding:30px 10px}
+.tip{background:var(--card);border:1px dashed var(--gold);border-radius:14px;padding:12px 14px;margin-top:14px;font-size:14px;display:flex;gap:10px;align-items:center}.tip button{margin-left:auto;color:var(--mut);font-size:18px}
+.bar{display:flex;align-items:center;gap:8px;padding:10px 12px 4px}
+.back{font-size:30px;line-height:1;width:40px;height:40px;border-radius:50%}.back:active{background:var(--line)}
+#ttl{flex:1;font:600 19px ui-serif,Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:6px}
+.seg{display:flex;background:var(--line);border-radius:12px;padding:3px;margin:6px 20px}.seg button{flex:1;padding:8px;border-radius:9px;font-weight:600;color:var(--mut)}.seg .on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0002}
+.pb{height:4px;background:var(--line);border-radius:4px;margin:10px 20px 0;overflow:hidden}.pb i{display:block;height:100%;width:0;background:var(--gold);transition:width .25s}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:14px 20px;min-height:0}
+.fc{perspective:1200px;height:min(54vh,420px);cursor:pointer}
+.in{position:relative;width:100%;height:100%;transition:transform .45s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d}.fc.flip .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;overflow:auto}
+.face.b{transform:rotateY(180deg)}
+.lbl{position:absolute;top:16px;left:20px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.face .t{font:600 26px/1.25 ui-serif,Georgia,serif}.face .d{font-size:21px;line-height:1.35}
+.badge{position:absolute;top:12px;right:14px;background:var(--gold);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.ctl{display:flex;align-items:center;justify-content:space-between;padding:14px 4px 0}
+.rb{width:56px;height:56px;border-radius:50%;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh);font-size:26px;display:grid;place-items:center}.rb:active{transform:scale(.92)}
+.chip{padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:var(--card);font-size:14px;font-weight:600}.chip.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.hint{text-align:center;color:var(--mut);font-size:13px;margin-top:8px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:10px}.item.st{border-left:4px solid var(--gold)}
+.it{display:flex;align-items:flex-start;gap:8px}.it .t{flex:1;font-weight:700;padding:4px 0}.item .d{color:var(--mut);padding:2px 0 2px 36px}
+.sb{font-size:22px;color:var(--gold);width:28px}.x{color:var(--mut);width:28px;height:28px}
+.danger{color:var(--red);width:100%;padding:16px;font-weight:600}
+.foot{display:flex;gap:10px;padding:10px 20px 14px;border-top:1px solid var(--line);background:var(--bg)}
+.p{flex:1;background:var(--btn);color:#fff;border-radius:14px;padding:14px;font-weight:700}.s{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-weight:600}.p:active,.s:active{opacity:.8}
+#cam{position:fixed;inset:0;background:#000;z-index:20;display:none;flex-direction:column;color:#fff}#cam.on{display:flex}
+#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#cam>*:not(#vid){position:relative}
+.ct{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;background:linear-gradient(#000a,#0000)}
+.pill{background:#0009;border-radius:20px;padding:8px 14px;font-weight:600;backdrop-filter:blur(8px)}
+.cb{margin-top:auto;padding:12px 20px calc(env(safe-area-inset-bottom) + 18px);background:linear-gradient(#0000,#000b)}
+.th{display:flex;gap:8px;overflow-x:auto;padding-bottom:14px;min-height:62px}.th div{position:relative;flex:none}.th img{width:44px;height:58px;object-fit:cover;border-radius:8px;border:2px solid #fff}.th b{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--red);font-size:12px;display:grid;place-items:center}
+.cr{display:flex;align-items:center;justify-content:space-between}
+.shut{width:76px;height:76px;border-radius:50%;border:4px solid #fff;background:none;padding:5px}.shut i{display:block;width:100%;height:100%;border-radius:50%;background:#fff;transition:transform .1s}.shut:active i{transform:scale(.86)}
+.cc{min-width:84px;padding:12px 18px;border-radius:24px;background:#ffffff26;font-weight:700;backdrop-filter:blur(8px)}.cc.go{background:var(--gold);text-align:center}
+#cerr{position:absolute;top:30%;left:0;right:0;text-align:center;padding:24px}
+#cam.fl::after{content:"";position:absolute;inset:0;background:#fff;opacity:.7;animation:f .2s forwards}@keyframes f{to{opacity:0}}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px}.ov.on{display:flex}
+.sp{width:54px;height:54px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--gold);animation:r 0.9s linear infinite}@keyframes r{to{transform:rotate(360deg)}}
+.sheet{position:fixed;inset:0;background:#0007;z-index:40;display:none;align-items:flex-end;justify-content:center}.sheet.on{display:flex}
+.sheet>div{background:var(--bg);width:100%;max-width:520px;border-radius:26px 26px 0 0;padding:22px 20px calc(env(safe-area-inset-bottom) + 20px)}
+.sheet h3{margin:0 0 8px;font-size:22px}.sheet ol{padding-left:20px;color:var(--mut);font-size:14px}.sheet a{color:var(--btn);font-weight:600}
+input{width:100%;font:16px ui-monospace,monospace;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);margin:10px 0;-webkit-user-select:text;user-select:text}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 90px);transform:translate(-50%,20px);background:#1D2433;color:#fff;padding:12px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:88%;text-align:center;font-size:14px}#toast.on{opacity:1;transform:translate(-50%,0)}
+</style></head><body>
+
+<section class="screen on" id="home">
+ <div class="top"><div class="crest">M</div><div><h1 class="serif">McEwen's Studier</h1><div class="sub">Honors American World History</div></div></div>
+ <div class="body">
+  <button class="cta" id="scan"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg><div><b>Scan a study packet</b><span>Snap every page, tap Done, get flash cards</span></div></button>
+  <div class="tip" id="tip" hidden><span>Install: tap <b>Share</b>, then <b>Add to Home Screen</b>.</span><button id="tipx" aria-label="Dismiss">✕</button></div>
+  <h2>Your sets</h2><div id="sets"></div>
+ </div>
+</section>
+
+<section class="screen" id="deck">
+ <div class="bar"><button class="back" id="bk" aria-label="Back">‹</button><div id="ttl" contenteditable spellcheck="false"></div></div>
+ <div class="seg"><button id="tS" class="on">Study</button><button id="tL">All cards</button></div>
+ <div id="vS" class="stage">
+  <div class="pb" style="margin:0 0 14px"><i id="pbar"></i></div>
+  <div class="fc" id="fc"><div class="in"><div class="face"><span class="lbl">Term</span><span class="badge" id="b1">★ TEST</span><div class="t" id="fT"></div></div><div class="face b"><span class="lbl">Answer</span><span class="badge" id="b2">★ TEST</span><div class="d" id="fD"></div></div></div></div>
+  <div class="ctl"><button class="rb" id="pv" aria-label="Previous">‹</button><div style="text-align:center"><div id="cnt" style="font-weight:700"></div><div class="hint">Tap card to flip</div></div><button class="rb" id="nx" aria-label="Next">›</button></div>
+  <div class="ctl" style="justify-content:center;gap:10px"><button class="chip" id="sf">★ Test only</button><button class="chip" id="sh">Shuffle</button></div>
+ </div>
+ <div id="vL" class="body" hidden><div id="list"></div><button class="danger" id="del">Delete this set</button></div>
+ <div class="foot"><button class="p" id="cp">Copy for Quizlet</button><button class="s" id="qz">Quizlet</button><button class="s" id="shr" aria-label="Share">Share</button></div>
+</section>
+
+<div id="cam"><video id="vid" playsinline muted autoplay></video>
+ <div class="ct"><button class="pill" id="cx">Cancel</button><span class="pill" id="cn">0 pages</span></div>
+ <div id="cerr" hidden><b>Camera unavailable</b><br>Allow camera access, or add photos from your library.</div>
+ <div class="cb"><div class="th" id="th"></div><div class="cr"><label class="cc" style="text-align:center">Photos<input id="file" type="file" accept="image/*" multiple hidden></label><button class="shut" id="sht" aria-label="Take photo"><i></i></button><button class="cc go" id="dn">Done</button></div></div>
+</div>
+
+<div class="ov" id="busy"><div class="sp" id="sp"></div><div class="serif" style="font-size:22px" id="bm"></div><div class="hint" id="bh">This usually takes under a minute.</div><div id="bb" style="display:none;gap:10px"><button class="p" id="rt" style="padding:14px 26px">Retry</button><button class="s" id="bc">Back to camera</button></div></div>
+
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get:(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch{return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{toast('Phone storage is full')}}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let sets=LS.get('mcs_sets',[]),pages=[],stream=null,cur=null,idx=0,starOnly=false,ord=[],ctl=null,tt;
+function toast(m,ms=2400){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),ms)}
+const show=id=>$$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
+const save=()=>LS.set('mcs_sets',sets);
+
+function home(){$('#sets').innerHTML=sets.length?sets.map(s=>`<button class="row" data-id="${s.id}"><div><b class="serif">${esc(s.title)}</b><small>${s.cards.length} cards · ${s.cards.filter(c=>c.star).length} ★ test · ${new Date(s.date).toLocaleDateString()}</small></div><span>›</span></button>`).join(''):'<div class="empty">No sets yet.<br>Scan your first packet to begin.</div>'}
+$('#sets').onclick=e=>{const r=e.target.closest('.row');if(r)openSet(r.dataset.id)};
+if(navigator.standalone===false&&!LS.get('mcs_tip',0))$('#tip').hidden=false;
+$('#tipx').onclick=()=>{$('#tip').hidden=true;LS.set('mcs_tip',1)};
+
+/* camera */
+const thumbs=()=>{$('#cn').textContent=pages.length+(pages.length===1?' page':' pages');$('#th').innerHTML=pages.map((p,i)=>`<div><img src="${p}" alt="Page ${i+1}"><b data-i="${i}">✕</b></div>`).join('');$('#th').scrollLeft=1e5}
+$('#th').onclick=e=>{const b=e.target.closest('b');if(b){pages.splice(+b.dataset.i,1);thumbs()}};
+async function openCam(){$('#cam').classList.add('on');thumbs();$('#cerr').hidden=true;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440}},audio:false});const v=$('#vid');v.srcObject=stream;await v.play()}catch{$('#cerr').hidden=false}}
+function closeCam(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('#vid').srcObject=null;$('#cam').classList.remove('on')}
+$('#scan').onclick=()=>{pages=[];openCam()};
+$('#cx').onclick=()=>{if(pages.length&&!confirm('Discard '+pages.length+' photos?'))return;pages=[];closeCam()};
+const MAX=1800;
+function shrink(src,w,h){const sc=Math.min(1,MAX/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.72)}
+$('#sht').onclick=()=>{const v=$('#vid');if(!v.videoWidth)return toast('Camera is not ready');pages.push(shrink(v,v.videoWidth,v.videoHeight));thumbs();const c=$('#cam');c.classList.remove('fl');void c.offsetWidth;c.classList.add('fl');navigator.vibrate&&navigator.vibrate(15)};
+$('#file').onchange=async e=>{for(const f of e.target.files){await new Promise(r=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{pages.push(shrink(i,i.naturalWidth,i.naturalHeight));URL.revokeObjectURL(u);r()};i.onerror=()=>{toast('Could not read one photo');r()};i.src=u})}e.target.value='';thumbs()};
+$('#dn').onclick=()=>{if(!pages.length)return toast('Take at least one page first');closeCam();run()};
+
+/* AI */
+const PROMPT=`You are making flash cards from photos of a multi-page study packet for Honors American World History. Read EVERY page in order and cover the whole packet.
+Rules:
+- One card per term, person, event, question, or statement. Do not skip items. No duplicates. Ignore headers, footers, page numbers.
+- "term" is short. "definition" is ONE short sentence (max 20 words), keeping dates, names, and the key cause or effect.
+- Any item with an asterisk (*) next to it is a guaranteed test question: set star=true and remove the asterisk from the text.
+- If an item is a question, the term is the question and the definition is the answer. If a statement has no answer given, write the key fact or explanation from your history knowledge.
+- Fix handwriting or photo typos. Give the set a short title.`;
+const SCHEMA={type:'OBJECT',properties:{title:{type:'STRING'},cards:{type:'ARRAY',items:{type:'OBJECT',properties:{term:{type:'STRING'},definition:{type:'STRING'},star:{type:'BOOLEAN'}},required:['term','definition','star']}}},required:['title','cards']};
+const KEY='AQ.Ab8RN6LdaQmdd2ndVKry8XxaU3Ihg93k8q7xPocUDfTZEF3A5g'; // your Gemini key from aistudio.google.com/apikey
+async function gemini(){if(KEY.startsWith('PASTE'))throw Error('Setup not finished: put your Gemini key in index.html.');
+ const body=JSON.stringify({contents:[{parts:[{text:PROMPT},...pages.map(p=>({inlineData:{mimeType:'image/jpeg',data:p.split(',')[1]}}))]}],generationConfig:{temperature:.2,responseMimeType:'application/json',responseSchema:SCHEMA,maxOutputTokens:32768,thinkingConfig:{thinkingBudget:0}}});
+ let err;
+ for(const m of ['gemini-2.5-flash','gemini-2.5-flash-lite'])for(let a=0;a<2;a++){
+  let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':KEY},body})}catch(e){if(e.name==='AbortError')throw e;throw Error('No internet connection. Check your signal and retry.')}
+  if(r.ok){const j=await r.json();const t=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');try{return JSON.parse(t)}catch{err=Error('The AI reply was cut off. Try fewer pages at once.');break}}
+  const e=await r.json().catch(()=>({})),msg=e.error?.message||'Error '+r.status;
+  if(r.status===400&&/API key/i.test(msg))throw Error('The app\'s AI key has a problem. Tell the app owner.');
+  if(r.status===403)throw Error('The AI service blocked this request. Try again later.');
+  err=Error(r.status===429?'The free limit was hit for a moment. Wait a minute and retry.':msg);
+  if(![429,500,503].includes(r.status))throw err;
+  await new Promise(s=>setTimeout(s,1500*(a+1)));}
+ throw err||Error('Something went wrong.')}
+async function run(){ctl=new AbortController();const B=$('#busy');B.classList.add('on');$('#sp').style.display='';$('#bb').style.display='none';$('#bh').style.display='';
+ const M=['Reading your pages…','Spotting the starred items…','Writing flash cards…','Almost there…'];let i=0;$('#bm').textContent=M[0];const t=setInterval(()=>$('#bm').textContent=M[Math.min(++i,3)],5000);
+ try{const d=await gemini();const cards=(d.cards||[]).map(c=>({term:String(c.term||'').trim(),def:String(c.definition||'').trim(),star:!!c.star})).filter(c=>c.term&&c.def);
+  if(!cards.length)throw Error('No cards found. Try brighter, flatter photos.');
+  const s={id:Date.now()+'',title:String(d.title||'Untitled set').trim(),date:Date.now(),cards};sets.unshift(s);save();pages=[];home();B.classList.remove('on');openSet(s.id)}
+ catch(e){if(e.name==='AbortError')return;$('#sp').style.display='none';$('#bh').style.display='none';$('#bm').textContent=e.message;$('#bb').style.display='flex'}
+ finally{clearInterval(t)}}
+$('#rt').onclick=run;$('#bc').onclick=()=>{$('#busy').classList.remove('on');openCam()};
+
+/* deck */
+function openSet(id){cur=sets.find(s=>s.id===id);if(!cur)return;idx=0;starOnly=false;$('#sf').classList.remove('on');$('#ttl').textContent=cur.title;tab('S');show('deck')}
+function tab(w){$('#tS').classList.toggle('on',w==='S');$('#tL').classList.toggle('on',w==='L');$('#vS').hidden=w!=='S';$('#vL').hidden=w!=='L';w==='S'?study():list()}
+$('#tS').onclick=()=>tab('S');$('#tL').onclick=()=>tab('L');
+function order(){ord=cur.cards.map((_,i)=>i).filter(i=>!starOnly||cur.cards[i].star);if(idx>=ord.length)idx=0}
+function study(){order();const f=$('#fc'),was=f.classList.contains('flip');f.classList.remove('flip');
+ setTimeout(()=>{const n=ord.length,c=cur.cards[ord[idx]];$('#cnt').textContent=n?`${idx+1} of ${n}`:'0 cards';$('#pbar').style.width=n?(idx+1)/n*100+'%':'0';
+  $('#fT').textContent=c?c.term:'No ★ test cards in this set';$('#fD').textContent=c?c.def:'';$('#b1').hidden=$('#b2').hidden=!(c&&c.star)},was?220:0)}
+const go=d=>{order();if(!ord.length)return;idx=(idx+d+ord.length)%ord.length;study()};
+$('#nx').onclick=()=>go(1);$('#pv').onclick=()=>go(-1);$('#fc').onclick=()=>{if(ord.length)$('#fc').classList.toggle('flip')};
+$('#sf').onclick=()=>{starOnly=!starOnly;$('#sf').classList.toggle('on',starOnly);idx=0;study()};
+$('#sh').onclick=()=>{for(let i=cur.cards.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[cur.cards[i],cur.cards[j]]=[cur.cards[j],cur.cards[i]]}save();idx=0;study();toast('Shuffled')};
+let sx=0;$('#fc').addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+$('#fc').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>60){e.preventDefault();go(d<0?1:-1)}});
+function list(){$('#list').innerHTML=cur.cards.map((c,i)=>`<div class="item ${c.star?'st':''}" data-i="${i}"><div class="it"><button class="sb" data-a="s" aria-label="Toggle test star">${c.star?'★':'☆'}</button><div class="t" contenteditable data-f="term">${esc(c.term)}</div><button class="x" data-a="d" aria-label="Delete card">✕</button></div><div class="d" contenteditable data-f="def">${esc(c.def)}</div></div>`).join('')||'<div class="empty">No cards left.</div>'}
+$('#list').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.closest('.item').dataset.i;if(b.dataset.a==='s')cur.cards[i].star=!cur.cards[i].star;else cur.cards.splice(i,1);save();list()};
+$('#list').addEventListener('focusout',e=>{const el=e.target.closest('[contenteditable]');if(!el)return;const i=+el.closest('.item').dataset.i,v=el.textContent.trim();if(v)cur.cards[i][el.dataset.f]=v;else el.textContent=cur.cards[i][el.dataset.f];save()});
+$('#ttl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.target.blur()}});
+$('#ttl').addEventListener('blur',e=>{const v=e.target.textContent.trim();if(v)cur.title=v;else e.target.textContent=cur.title;save();home()});
+$('#bk').onclick=()=>{home();show('home')};
+$('#del').onclick=()=>{if(confirm('Delete "'+cur.title+'"?')){sets=sets.filter(s=>s!==cur);save();home();show('home')}};
+
+/* export */
+const cl=s=>s.replace(/[\t\r\n]+/g,' ');
+const qtext=()=>cur.cards.map(c=>(c.star?'★ ':'')+cl(c.term)+'\t'+cl(c.def)).join('\n');
+$('#cp').onclick=async()=>{const t=qtext();try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}toast('Copied. In Quizlet: Create, then Import, then paste.',3800)};
+$('#qz').onclick=()=>window.open('https://quizlet.com/create-set','_blank');
+$('#shr').onclick=async()=>{const t=qtext();try{if(navigator.share)await navigator.share({title:cur.title,text:t});else throw 0}catch(e){if(e&&e.name==='AbortError')return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=cur.title.replace(/\W+/g,'_')+'.txt';a.click()}};
+
+home();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
